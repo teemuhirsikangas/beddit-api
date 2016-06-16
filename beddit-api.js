@@ -25,7 +25,10 @@ Beddit.prototype._call = function(method, resource, data)
 	  options.form = data;
 
     // otherwise for get we should add it as query parameters
-    // TODO
+    if(options.method === 'GET') {
+      options.qs = data;
+    }
+
 
     // generic callback, handle error, parse body
     var callback = function(err, res, body)
@@ -82,4 +85,17 @@ Beddit.prototype.login = function(username, password) {
 /** Retrieve all sleep data */
 Beddit.prototype.sleep = function() {	
     return this._call('GET', 'user/' + this.authorized.id + '/sleep');
+};
+
+
+/** Retrieve sleep data for period */
+//check paramenters from here: https://github.com/beddit/beddit-api/blob/master/3_2-SleepResources.md
+Beddit.prototype.sleep = function(start_date, end_date) {	
+	var queryparams = { 'start_date': start_date, 'end_date': end_date };
+    return this._call('GET', 'user/' + this.authorized.id + '/sleep', queryparams);
+};
+
+/** Retrieve sleep data with queryparameters */
+Beddit.prototype.sleep = function(queryParams) {	
+    return this._call('GET', 'user/' + this.authorized.id + '/sleep', queryParams);
 };
